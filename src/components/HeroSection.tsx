@@ -1,6 +1,47 @@
 import { Github, Linkedin, Mail, ChevronDown, Download } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+const roles = [
+  'AI Engineer',
+  'Generative AI Specialist',
+  'Computer Vision Expert',
+  'LLM Developer',
+  'Deep Learning Engineer',
+  'RAG Systems Architect'
+];
 
 const HeroSection = () => {
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentRole = roles[currentRoleIndex];
+    const typingSpeed = isDeleting ? 50 : 100;
+    const pauseTime = 2000;
+
+    if (!isDeleting && displayedText === currentRole) {
+      const timeout = setTimeout(() => setIsDeleting(true), pauseTime);
+      return () => clearTimeout(timeout);
+    }
+
+    if (isDeleting && displayedText === '') {
+      setIsDeleting(false);
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setDisplayedText((prev) =>
+        isDeleting
+          ? prev.slice(0, -1)
+          : currentRole.slice(0, prev.length + 1)
+      );
+    }, typingSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [displayedText, isDeleting, currentRoleIndex]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Layered parallax gradients */}
@@ -23,14 +64,11 @@ const HeroSection = () => {
             <span className="text-gradient glow-text">Osama Ali Shah</span>
           </h1>
 
-          {/* Title */}
-          <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-8 opacity-0 animate-fade-up delay-200">
-            <span className="text-primary">AI Engineer</span>
-            <span className="mx-3 text-border">|</span>
-            <span>Generative AI</span>
-            <span className="mx-3 text-border">|</span>
-            <span>Computer Vision</span>
-          </p>
+          {/* Animated Typing Title */}
+          <div className="text-lg sm:text-xl md:text-2xl mb-8 opacity-0 animate-fade-up delay-200 h-10 flex items-center justify-center">
+            <span className="text-primary font-display">{displayedText}</span>
+            <span className="w-0.5 h-6 bg-primary ml-1 animate-pulse" />
+          </div>
 
           {/* Description */}
           <p className="text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed opacity-0 animate-fade-up delay-300">
