@@ -1,8 +1,12 @@
 import { useInView } from '../hooks/useInView';
+import { useMouseParallax } from '../hooks/useParallax';
 import { Cpu, MessageSquare, Bot, Activity, Stethoscope, Rocket } from 'lucide-react';
+import { useState } from 'react';
 
 const ProjectsSection = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
+  const mousePos = useMouseParallax(0.015);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const projects = [
     {
@@ -50,8 +54,20 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" className="py-32 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary)/0.1)_0%,_transparent_60%)]" />
+    <section id="projects" className="py-32 relative overflow-hidden">
+      {/* Parallax background layers */}
+      <div 
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary)/0.12)_0%,_transparent_60%)]"
+        style={{ transform: `translateY(${mousePos.y}px)` }}
+      />
+      <div 
+        className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl"
+        style={{ transform: `translate(${mousePos.x * 1.5}px, ${mousePos.y * 1.5}px)` }}
+      />
+      <div 
+        className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-accent/8 rounded-full blur-3xl"
+        style={{ transform: `translate(${-mousePos.x}px, ${-mousePos.y}px)` }}
+      />
       
       <div className="container mx-auto px-6 relative z-10">
         <div ref={ref}>
@@ -63,19 +79,28 @@ const ProjectsSection = () => {
             Featured Projects
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto perspective-1000">
             {projects.map((project, index) => (
               <div
                 key={project.title}
-                className={`glass-card p-6 group hover:glow-box transition-all duration-500 cursor-pointer ${
+                className={`glass-card p-6 group transition-all duration-500 cursor-pointer ${
                   isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: `${200 + index * 100}ms` }}
+                } ${hoveredIndex === index ? 'glow-box z-10' : ''}`}
+                style={{ 
+                  transitionDelay: `${200 + index * 100}ms`,
+                  transform: hoveredIndex === index 
+                    ? `perspective(1000px) rotateX(${mousePos.y * 0.3}deg) rotateY(${mousePos.x * 0.3}deg) translateZ(20px) scale(1.05)`
+                    : isInView 
+                      ? `perspective(1000px) rotateX(${mousePos.y * 0.05}deg) rotateY(${mousePos.x * 0.05}deg)`
+                      : undefined
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-125 group-hover:rotate-6 group-hover:bg-primary/20 transition-all duration-300">
                   <project.icon className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-display text-lg font-semibold mb-3 group-hover:text-primary transition-colors">
+                <h3 className="font-display text-lg font-semibold mb-3 group-hover:text-gradient transition-colors duration-300">
                   {project.title}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
@@ -85,7 +110,7 @@ const ProjectsSection = () => {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground"
+                      className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground group-hover:bg-primary/20 group-hover:text-primary transition-colors duration-300"
                     >
                       {tag}
                     </span>

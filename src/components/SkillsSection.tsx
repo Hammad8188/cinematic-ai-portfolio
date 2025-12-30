@@ -1,7 +1,9 @@
 import { useInView } from '../hooks/useInView';
+import { useMouseParallax } from '../hooks/useParallax';
 
 const SkillsSection = () => {
   const { ref, isInView } = useInView({ threshold: 0.2 });
+  const mousePos = useMouseParallax(0.02);
 
   const skillCategories = [
     {
@@ -31,8 +33,20 @@ const SkillsSection = () => {
   ];
 
   return (
-    <section id="skills" className="py-32 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsl(var(--accent)/0.1)_0%,_transparent_60%)]" />
+    <section id="skills" className="py-32 relative overflow-hidden">
+      {/* Layered parallax backgrounds */}
+      <div 
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsl(var(--accent)/0.12)_0%,_transparent_60%)]"
+        style={{ transform: `translateY(${mousePos.y * 2}px)` }}
+      />
+      <div 
+        className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"
+        style={{ transform: `translate(${mousePos.x}px, ${-mousePos.y}px)` }}
+      />
+      <div 
+        className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-accent/8 rounded-full blur-3xl"
+        style={{ transform: `translate(${-mousePos.x * 1.5}px, ${mousePos.y * 1.5}px)` }}
+      />
       
       <div className="container mx-auto px-6 relative z-10">
         <div ref={ref}>
@@ -48,17 +62,24 @@ const SkillsSection = () => {
             {skillCategories.map((category, categoryIndex) => (
               <div
                 key={category.title}
-                className={`glass-card p-6 transition-all duration-700 hover:glow-box ${
+                className={`glass-card p-6 transition-all duration-700 hover:glow-box group hover:transform-gpu hover:-translate-y-3 hover:scale-[1.02] ${
                   isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
-                style={{ transitionDelay: `${200 + categoryIndex * 100}ms` }}
+                style={{ 
+                  transitionDelay: `${200 + categoryIndex * 100}ms`,
+                  transform: isInView ? `perspective(1000px) rotateX(${mousePos.y * 0.05}deg) rotateY(${mousePos.x * 0.05}deg)` : undefined
+                }}
               >
-                <h3 className="font-display text-lg font-semibold text-primary mb-4">
+                <h3 className="font-display text-lg font-semibold text-primary mb-4 group-hover:text-gradient transition-all">
                   {category.title}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill) => (
-                    <span key={skill} className="skill-badge">
+                  {category.skills.map((skill, skillIndex) => (
+                    <span 
+                      key={skill} 
+                      className="skill-badge opacity-0 animate-fade-in"
+                      style={{ animationDelay: `${400 + categoryIndex * 100 + skillIndex * 50}ms`, animationFillMode: 'forwards' }}
+                    >
                       {skill}
                     </span>
                   ))}
