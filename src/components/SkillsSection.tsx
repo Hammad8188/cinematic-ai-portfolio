@@ -1,0 +1,75 @@
+import { useInView } from '../hooks/useInView';
+
+const SkillsSection = () => {
+  const { ref, isInView } = useInView({ threshold: 0.2 });
+
+  const skillCategories = [
+    {
+      title: 'Generative AI / LLMs',
+      skills: ['LangChain', 'LangGraph', 'MCP', 'RAG', 'Fine-tuning'],
+    },
+    {
+      title: 'Machine Learning',
+      skills: ['scikit-learn', 'XGBoost', 'LightGBM', 'TensorFlow', 'Keras', 'PyTorch'],
+    },
+    {
+      title: 'Computer Vision',
+      skills: ['OpenCV', 'CNNs', 'YOLO', 'Image Classification', 'Object Detection', 'Video Analysis'],
+    },
+    {
+      title: 'Data Science',
+      skills: ['NumPy', 'Pandas', 'Matplotlib', 'Seaborn', 'Plotly'],
+    },
+    {
+      title: 'Web Development',
+      skills: ['Flask', 'FastAPI', 'Streamlit', 'Docker'],
+    },
+    {
+      title: 'Automation & Data',
+      skills: ['BeautifulSoup', 'Selenium', 'n8n', 'SQLite', 'PostgreSQL'],
+    },
+  ];
+
+  return (
+    <section id="skills" className="py-32 relative">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_hsl(var(--accent)/0.1)_0%,_transparent_60%)]" />
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div ref={ref}>
+          <h2
+            className={`section-title text-center mb-16 transition-all duration-700 ${
+              isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            Skills & Expertise
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {skillCategories.map((category, categoryIndex) => (
+              <div
+                key={category.title}
+                className={`glass-card p-6 transition-all duration-700 hover:glow-box ${
+                  isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${200 + categoryIndex * 100}ms` }}
+              >
+                <h3 className="font-display text-lg font-semibold text-primary mb-4">
+                  {category.title}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill) => (
+                    <span key={skill} className="skill-badge">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default SkillsSection;
