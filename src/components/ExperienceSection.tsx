@@ -58,8 +58,8 @@ const ExperienceSection = () => {
           <div className="max-w-4xl mx-auto">
             {/* Experience Timeline */}
             <div className="relative">
-              {/* Vertical line */}
-              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-accent to-transparent md:-translate-x-1/2" />
+              {/* Vertical line - extended */}
+              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-accent via-70% to-primary/30 md:-translate-x-1/2" />
 
               {experiences.map((exp, index) => (
                 <div
@@ -91,46 +91,51 @@ const ExperienceSection = () => {
                   </div>
                 </div>
               ))}
-            </div>
 
-            {/* Education & Certifications Grid */}
-            <div className="grid md:grid-cols-2 gap-6 mt-16">
-              {/* Education */}
+              {/* Education & Certifications on Timeline */}
               <div
-                className={`glass-card p-6 transition-all duration-700 delay-500 ${
+                className={`relative flex flex-col md:flex-row gap-8 mb-12 transition-all duration-700 ${
                   isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
+                style={{ transitionDelay: '500ms' }}
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <GraduationCap className="w-6 h-6 text-primary" />
-                  <h3 className="font-display text-lg font-semibold">Education</h3>
-                </div>
-                <h4 className="font-semibold mb-1">{education.degree}</h4>
-                <p className="text-muted-foreground text-sm mb-2">{education.university}</p>
-                <p className="text-sm text-muted-foreground">{education.period}</p>
-                <p className="text-primary font-semibold mt-2">CGPA: {education.cgpa}</p>
-              </div>
+                {/* Timeline dot */}
+                <div className="absolute left-0 md:left-1/2 w-4 h-4 bg-accent rounded-full md:-translate-x-1/2 animate-pulse-glow" />
 
-              {/* Certifications */}
-              <div
-                className={`glass-card p-6 transition-all duration-700 delay-600 ${
-                  isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <Award className="w-6 h-6 text-primary" />
-                  <h3 className="font-display text-lg font-semibold">Certifications</h3>
+                {/* Education - Left side */}
+                <div className="md:w-1/2 md:pr-12 md:text-right">
+                  <div className="glass-card p-6 ml-8 md:ml-0 hover:border-primary/50 transition-all duration-300">
+                    <div className="flex items-center gap-3 mb-4 md:justify-end">
+                      <GraduationCap className="w-6 h-6 text-primary" />
+                      <h3 className="font-display text-xl font-semibold">Education</h3>
+                    </div>
+                    <h4 className="font-semibold text-foreground mb-1">{education.degree}</h4>
+                    <p className="text-muted-foreground text-sm mb-2">{education.university}</p>
+                    <p className="text-sm text-muted-foreground mb-3">{education.period}</p>
+                    <p className="text-primary font-display font-bold text-lg">CGPA: {education.cgpa}</p>
+                  </div>
                 </div>
-                <ul className="space-y-2">
-                  {certifications.map((cert, i) => (
-                    <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-                      {cert}
-                    </li>
-                  ))}
-                </ul>
+
+                {/* Certifications - Right side */}
+                <div className="md:w-1/2 md:pl-12">
+                  <div className="glass-card p-6 ml-8 md:ml-0 hover:border-primary/50 transition-all duration-300">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Award className="w-6 h-6 text-primary" />
+                      <h3 className="font-display text-xl font-semibold">Certifications</h3>
+                    </div>
+                    <ul className="space-y-3">
+                      {certifications.map((cert, i) => (
+                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-3">
+                          <span className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />
+                          {cert}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
