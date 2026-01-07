@@ -1,5 +1,6 @@
 import { Github, Linkedin, Mail, ChevronDown, Download } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import FloatingBadges from './FloatingBadges';
 
 const roles = [
   'AI Engineer',
@@ -53,6 +54,9 @@ const HeroSection = () => {
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
       <div className="absolute top-1/2 right-1/3 w-48 h-48 bg-primary/3 rounded-full blur-2xl animate-float" style={{ animationDelay: '-1.5s' }} />
+      
+      {/* Floating skill badges */}
+      <FloatingBadges />
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center">

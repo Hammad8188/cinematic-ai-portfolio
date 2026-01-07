@@ -239,6 +239,41 @@
   }
 }
 
+@keyframes orbit {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg) translateX(10px) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(180deg) translateX(10px) rotate(-180deg);
+    opacity: 0.4;
+  }
+  75% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg) translateX(10px) rotate(-360deg);
+    opacity: 0.4;
+  }
+}
+
+.animate-orbit {
+  animation: orbit 20s linear infinite;
+}
+
+.floating-badge {
+  box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.3);
+  transition: all 0.3s ease;
+}
+
+.floating-badge:hover {
+  box-shadow: 0 0 30px -5px hsl(var(--primary) / 0.5);
+  border-color: hsl(var(--primary) / 0.5);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;

@@ -1,4 +1,5 @@
 import { useInView } from '../hooks/useInView';
+import { useScrollProgress } from '../hooks/useScrollProgress';
 import { Briefcase, GraduationCap, Award } from 'lucide-react';
 import { useState, useRef, MouseEvent } from 'react';
 
@@ -52,6 +53,8 @@ const TiltCard = ({ children, className = '' }: TiltCardProps) => {
 
 const ExperienceSection = () => {
   const { ref, isInView } = useInView({ threshold: 0.1 });
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const scrollProgress = useScrollProgress(timelineRef);
 
   const experiences = [
     {
@@ -106,9 +109,15 @@ const ExperienceSection = () => {
 
           <div className="max-w-4xl mx-auto">
             {/* Experience Timeline */}
-            <div className="relative">
-              {/* Vertical line - extended */}
-              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-accent via-70% to-primary/30 md:-translate-x-1/2" />
+            <div className="relative" ref={timelineRef}>
+              {/* Animated vertical line */}
+              <div className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px md:-translate-x-1/2 overflow-hidden">
+                <div className="absolute inset-0 bg-border/30" />
+                <div 
+                  className="absolute left-0 right-0 top-0 bg-gradient-to-b from-primary via-accent via-70% to-primary/30 transition-all duration-100 ease-out"
+                  style={{ height: `${scrollProgress * 100}%` }}
+                />
+              </div>
 
               {experiences.map((exp, index) => (
                 <div
